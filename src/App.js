@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import style from "./App.module.css"
 
-function App() {
+function RandomQuots() {
+  const [quots, setQuots] = useState("");
+
+  const getQuots = () => {
+    fetch("https://type.fit/api/quotes")
+      .then((response) => response.json())
+      .then((data) => {
+        let randomNumber = Math.floor(Math.random() * data.length);
+        setQuots(data[randomNumber]);
+      });
+  };
+
+  useEffect(() => {
+    getQuots();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={style.quote}>
+      <div className={style.quote_container}>
+        <p className={style.text}>{quots.text}</p>
+        <p className={style.text}>Author: {quots.author}</p>
+        <div className={style.container_button}>
+          <button onClick={getQuots} className={style.button}>getQuote</button>
+            <a className={style.button}
+              href={`https://twitter.com/compose/tweet`}
+              target="blank"
+              >
+              Tweet
+            </a>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default App;
+export default RandomQuots;
